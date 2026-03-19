@@ -19,7 +19,7 @@ const nodes = [
     color: "#98A389",
   },
   {
-    level: "LEVEL C: SOCIAL ISOLATION",
+    level: "LEVEL C:SOCIAL ISOLATION",
     desc: "Labirin navigasi.",
     color: "#B88E6D",
   },
