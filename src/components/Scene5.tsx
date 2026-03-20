@@ -192,7 +192,6 @@ export default function Scene5() {
       <a
         ref={linkRef}
         href="https://granita-v3.vercel.app"
-        target="_blank"
         rel="noopener noreferrer"
         onMouseEnter={onArgHoverEnter}
         onMouseLeave={onArgHoverLeave}
