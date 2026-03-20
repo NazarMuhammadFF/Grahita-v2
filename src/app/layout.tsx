@@ -4,6 +4,8 @@ export const metadata = {
 };
 
 import "./globals.css";
+import CustomCursor from "@/components/CustomCursor";
+import AudioPlayer from "@/components/AudioPlayer";
 
 export default function RootLayout({
   children,
@@ -18,7 +20,11 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <AudioPlayer />
+        <CustomCursor />
+        {children}
+      </body>
     </html>
   );
 }

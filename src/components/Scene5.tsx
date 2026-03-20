@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -20,6 +20,46 @@ const entities = [
 export default function Scene5() {
   const containerRef = useRef<HTMLDivElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [linkPos, setLinkPos] = useState({ x: 0, y: 0 });
+  const [isHoveringScene, setIsHoveringScene] = useState(false);
+  const [angle, setAngle] = useState(0);
+
+  useEffect(() => {
+    const updatePositions = (e?: MouseEvent) => {
+      if (!isHoveringScene || !linkRef.current) return;
+      const rect = linkRef.current.getBoundingClientRect();
+      const targetX = rect.left + rect.width / 2;
+      const targetY = rect.top + rect.height / 2;
+
+      setLinkPos({ x: targetX, y: targetY });
+
+      if (e) {
+        const mx = e.clientX;
+        const my = e.clientY;
+        setMousePos({ x: mx, y: my });
+
+        // Calculate angle from mouse to target
+        const dx = targetX - mx;
+        const dy = targetY - my;
+        const rad = Math.atan2(dy, dx);
+        setAngle((rad * 180) / Math.PI);
+      }
+    };
+
+    const handleMouseMove = (e: MouseEvent) => updatePositions(e);
+    const handleScroll = () => updatePositions();
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isHoveringScene]);
 
   useGSAP(
     () => {
@@ -87,11 +127,45 @@ export default function Scene5() {
   return (
     <section
       ref={containerRef}
+      onMouseEnter={() => setIsHoveringScene(true)}
+      onMouseLeave={() => setIsHoveringScene(false)}
       className="min-h-screen w-full relative flex flex-col justify-between p-10 md:p-24 border-t border-white/10"
       style={{
         background: "linear-gradient(to bottom, #0B132B 0%, #000000 100%)",
       }}
     >
+      {isHoveringScene && (
+        <div
+          className="fixed pointer-events-none z-[40]"
+          style={{
+            left: mousePos.x,
+            top: mousePos.y,
+            transform: `rotate(${angle}deg)`,
+            transformOrigin: "0 0",
+          }}
+        >
+          {/* Arrow pointing towards target, slightly offset from cursor center */}
+          <div className="animate-bounceX">
+            <svg
+              width="40"
+              height="20"
+              viewBox="0 0 40 20"
+              fill="none"
+              style={{ marginLeft: "30px" }}
+              className="drop-shadow-[0_0_5px_rgba(214,40,40,0.5)]"
+            >
+              <path
+                d="M2 10H38M38 10L28 2M38 10L28 18"
+                stroke="#D62828"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+      )}
+
       {/* Top Section: Terminal Readout */}
       <div
         ref={terminalRef}
@@ -115,14 +189,17 @@ export default function Scene5() {
       </div>
 
       {/* Bottom Section: The Anomaly / ARG Link */}
-      <Link
-        href="#"
+      <a
+        ref={linkRef}
+        href="https://granita-v3.vercel.app"
+        target="_blank"
+        rel="noopener noreferrer"
         onMouseEnter={onArgHoverEnter}
         onMouseLeave={onArgHoverLeave}
         className="arg-link absolute bottom-10 right-10 md:right-24 font-mono text-xs md:text-sm tracking-[0.3em] text-[#D62828] opacity-30 uppercase cursor-pointer z-50"
       >
         [ SYSTEM FATAL ERROR: MISSING_BUSINESS_PITCH ]
-      </Link>
+      </a>
     </section>
   );
 }

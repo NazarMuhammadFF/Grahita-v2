@@ -80,9 +80,9 @@ export default function Home() {
       >
         {/* GLOBAL INTERACTION: The Dual-Metrics HUD */}
         <div
-          className={`fixed top-8 right-8 z-50 font-mono text-sm tracking-widest flex flex-col gap-3 transition-colors duration-500 ${hudColorClass}`}
+          className={`fixed top-8 left-8 z-50 font-mono text-sm tracking-widest flex flex-col gap-3 transition-colors duration-500 ${hudColorClass}`}
         >
-          <div className="flex items-center justify-end gap-3">
+          <div className="flex items-center justify-start gap-3">
             <span className="font-bold drop-shadow-sm">
               [PHYSICAL: {hudLevel}%]
             </span>
@@ -93,7 +93,7 @@ export default function Home() {
               />
             </div>
           </div>
-          <div className="flex items-center justify-end gap-3">
+          <div className="flex items-center justify-start gap-3">
             <span className="font-bold drop-shadow-sm">
               [MENTAL: {hudLevel}%]
             </span>
